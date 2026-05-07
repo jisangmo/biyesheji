@@ -498,9 +498,13 @@ apiRouter.get('/admin/stats', (req, res) => {
 // 注册API路由
 app.use('/api', apiRouter);
 
-// 前端路由fallback - 所有非API请求都返回index.html
-app.get(/^\/(?!api\/).*/, (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+// 测试路由 - 确保后端正常运行
+app.get('/', (req, res) => {
+  res.json({
+    message: '教育问答系统后端服务正常运行',
+    status: 'ok',
+    timestamp: new Date().toISOString()
+  });
 });
 
 // 启动服务器
