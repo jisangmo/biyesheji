@@ -1,0 +1,12 @@
+{
+  "name": "biyesheji-frontend",
+  "buildCommand": "npm run build",
+  "publishDir": "dist",
+  "redirects": [
+    {
+      "from": "/api/*",
+      "to": "/api/:rest",
+      "status": 200
+    }
+  ]
+}
