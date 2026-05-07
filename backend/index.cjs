@@ -39,66 +39,9 @@ const usersPath = path.join(__dirname, 'users.json');
 const feedbacksPath = path.join(__dirname, 'feedbacks.json');
 const adminUsersPath = path.join(__dirname, 'admin_users.json');
 
-// 确保对话文件存在并添加模拟数据
+// 确保对话文件存在（空数组）
 if (!fs.existsSync(conversationsPath)) {
-  const mockConversations = [
-    {
-      id: '1',
-      title: '手机歌对话',
-      messages: [
-        { id: 1, content: '你好！我是季桑陌，有什么可以帮助你的吗？', isUser: false },
-        { id: 2, content: '我想了解一下最新的手机歌', isUser: true },
-        { id: 3, content: '好的，最近有很多热门的手机歌，比如《孤勇者》、《起风了》等。你喜欢什么类型的音乐呢？', isUser: false }
-      ],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      id: '2',
-      title: 'Trae安装Vite失败解决',
-      messages: [
-        { id: 1, content: '你好！我是季桑陌，有什么可以帮助你的吗？', isUser: false },
-        { id: 2, content: '我在Trae中安装Vite失败了，怎么办？', isUser: true },
-        { id: 3, content: 'Vite安装失败可能是由于网络问题或依赖冲突。你可以尝试使用npm install vite@latest命令来安装最新版本的Vite。', isUser: false }
-      ],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      id: '3',
-      title: 'AI面试常见问题STAR法则作答',
-      messages: [
-        { id: 1, content: '你好！我是季桑陌，有什么可以帮助你的吗？', isUser: false },
-        { id: 2, content: '我想了解一下AI面试常见问题的STAR法则作答', isUser: true },
-        { id: 3, content: 'STAR法则是情境(Situation)、任务(Task)、行动(Action)、结果(Result)的缩写。在AI面试中，你可以使用这个法则来结构化地回答问题。', isUser: false }
-      ],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      id: '4',
-      title: '简历Word',
-      messages: [
-        { id: 1, content: '你好！我是季桑陌，有什么可以帮助你的吗？', isUser: false },
-        { id: 2, content: '我想制作一份简历，有什么建议吗？', isUser: true },
-        { id: 3, content: '制作简历时，要注意简洁明了，突出重点，使用专业的格式和字体。你可以使用Word的简历模板来快速制作。', isUser: false }
-      ],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    },
-    {
-      id: '5',
-      title: '销售管理分析AI面如何回答',
-      messages: [
-        { id: 1, content: '你好！我是季桑陌，有什么可以帮助你的吗？', isUser: false },
-        { id: 2, content: '销售管理分析AI面试时如何回答问题？', isUser: true },
-        { id: 3, content: '在销售管理分析AI面试中，你需要展示你的数据分析能力、问题解决能力和沟通能力。可以使用STAR法则来结构化地回答问题。', isUser: false }
-      ],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
-  ];
-  fs.writeFileSync(conversationsPath, JSON.stringify(mockConversations, null, 2));
+  fs.writeFileSync(conversationsPath, JSON.stringify([], null, 2));
 }
 
 // 确保用户文件存在
