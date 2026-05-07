@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import "./App.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
+
 function App() {
   const [user, setUser] = useState(null);
   const [showAuth, setShowAuth] = useState(false);
@@ -79,7 +81,7 @@ function App() {
 
   const fetchFeedbackStats = async () => {
     try {
-      const response = await fetch("/api/feedbacks/stats");
+      const response = await fetch(`${API_BASE_URL}/feedbacks/stats`);
       const data = await response.json();
       setStats(data);
     } catch (error) {
@@ -90,7 +92,7 @@ function App() {
   const fetchConversations = async () => {
     setIsLoadingConversations(true);
     try {
-      const response = await fetch("/api/conversations", {
+      const response = await fetch(`${API_BASE_URL}/conversations`, {
         headers: {
           "x-user-id": user?.id || "",
         },
@@ -120,7 +122,9 @@ function App() {
   const handleAuth = async () => {
     try {
       const endpoint =
-        authMode === "login" ? "/api/users/login" : "/api/users/register";
+        authMode === "login"
+          ? `${API_BASE_URL}/users/login`
+          : `${API_BASE_URL}/users/register`;
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -146,7 +150,7 @@ function App() {
   const fetchConversationsWithUser = async (currentUser) => {
     setIsLoadingConversations(true);
     try {
-      const response = await fetch("/api/conversations", {
+      const response = await fetch(`${API_BASE_URL}/conversations`, {
         headers: {
           "x-user-id": currentUser.id,
         },
@@ -191,11 +195,14 @@ function App() {
 
   const renameConversation = async (conversationId, newTitle) => {
     try {
-      const response = await fetch(`/api/conversations/${conversationId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: newTitle }),
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/conversations/${conversationId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title: newTitle }),
+        },
+      );
       if (response.ok) {
         setConversations((prev) =>
           prev.map((c) =>
@@ -228,7 +235,7 @@ function App() {
     };
 
     if (user) {
-      fetch("/api/conversations", {
+      fetch(`${API_BASE_URL}/conversations`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newConversation),
@@ -262,7 +269,7 @@ function App() {
         setMessageFeedbacks({});
         fetchFeedbacksForConversation(conversationId);
       } else {
-        fetch(`/api/conversations/${conversationId}`)
+        fetch(`${API_BASE_URL}/conversations/${conversationId}`)
           .then((response) => response.json())
           .then((conversation) => {
             setCurrentConversation(conversation);
@@ -281,7 +288,9 @@ function App() {
 
   const fetchFeedbacksForConversation = async (conversationId) => {
     try {
-      const response = await fetch(`/api/feedbacks/${conversationId}`);
+      const response = await fetch(
+        `${API_BASE_URL}/feedbacks/${conversationId}`,
+      );
       const feedbacks = await response.json();
       const feedbackMap = {};
       feedbacks.forEach((fb) => {
@@ -300,7 +309,7 @@ function App() {
     setConversations(newConversations);
 
     if (user) {
-      fetch(`/api/conversations/${conversationId}`, {
+      fetch(`${API_BASE_URL}/conversations/${conversationId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedConversation),
@@ -331,7 +340,7 @@ function App() {
     }
 
     if (user) {
-      fetch(`/api/conversations/${conversationId}`, {
+      fetch(`${API_BASE_URL}/conversations/${conversationId}`, {
         method: "DELETE",
       })
         .then((response) => {
@@ -350,7 +359,7 @@ function App() {
   const submitFeedback = async (messageId, isSatisfied) => {
     if (!currentConversation) return;
     try {
-      await fetch("/api/feedbacks", {
+      await fetch(`${API_BASE_URL}/feedbacks`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

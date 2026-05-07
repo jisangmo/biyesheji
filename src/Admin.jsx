@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import "./Admin.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
+
 function Admin() {
   const [admin, setAdmin] = useState(null);
   const [showAuth, setShowAuth] = useState(false);
@@ -28,7 +30,9 @@ function Admin() {
   const handleAuth = async () => {
     try {
       const endpoint =
-        authMode === "login" ? "/api/admin/login" : "/api/admin/register";
+        authMode === "login"
+          ? `${API_BASE_URL}/admin/login`
+          : `${API_BASE_URL}/admin/register`;
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -57,7 +61,7 @@ function Admin() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch("/api/admin/stats", {
+      const response = await fetch(`${API_BASE_URL}/admin/stats`, {
         headers: {
           "x-admin-id": admin.id,
         },

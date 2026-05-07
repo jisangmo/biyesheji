@@ -2,11 +2,20 @@
   "name": "biyesheji-frontend",
   "buildCommand": "npm run build",
   "publishDir": "dist",
-  "redirects": [
+  "envVars": {
+    "VITE_API_URL": "https://biyesheji.onrender.com/api"
+  },
+  "routes": [
     {
-      "from": "/api/*",
-      "to": "/api/:rest",
-      "status": 200
+      "src": "/api/(.*)",
+      "dest": "https://biyesheji.onrender.com/api/$1",
+      "headers": {
+        "Access-Control-Allow-Origin": "*"
+      }
+    },
+    {
+      "src": "/*",
+      "dest": "/index.html"
     }
   ]
 }
