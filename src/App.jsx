@@ -30,6 +30,7 @@ function App() {
   const [messageFeedbacks, setMessageFeedbacks] = useState({});
   const [editingId, setEditingId] = useState(null);
   const [editingTitle, setEditingTitle] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -43,8 +44,10 @@ function App() {
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
-      fetchConversations();
+      const parsedUser = JSON.parse(savedUser);
+      setUser(parsedUser);
+      // 直接传递用户ID，避免状态异步更新的问题
+      fetchConversations(parsedUser.id);
     } else {
       loadGuestConversations();
     }
@@ -89,12 +92,12 @@ function App() {
     }
   };
 
-  const fetchConversations = async () => {
+  const fetchConversations = async (userId = user?.id) => {
     setIsLoadingConversations(true);
     try {
       const response = await fetch(`${API_BASE_URL}/conversations`, {
         headers: {
-          "x-user-id": user?.id || "",
+          "x-user-id": userId || "",
         },
       });
       const data = await response.json();
@@ -496,6 +499,12 @@ function App() {
     <div className="app">
       <header className="header">
         <div className="header-left">
+          <button
+            className="menu-toggle"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            ☰
+          </button>
           <h1>季桑陌</h1>
         </div>
         <div className="header-right">
@@ -588,8 +597,18 @@ function App() {
       )}
 
       <main className="main">
-        <div className="sidebar">
-          <div className="sidebar-item" onClick={createNewConversation}>
+        <div
+          className={`overlay ${sidebarOpen ? "active" : ""}`}
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+        <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+          <div
+            className="sidebar-item"
+            onClick={() => {
+              createNewConversation();
+              setSidebarOpen(false);
+            }}
+          >
             <span>新增对话</span>
           </div>
           {isLoadingConversations ? (

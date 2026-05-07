@@ -496,51 +496,117 @@ body {
   background-color: #40a9ff;
 }
 
-.send-btn:disabled {
-  background-color: #d9d9d9;
-  cursor: not-allowed;
+/* 编辑输入框 */
+.edit-input {
+  border: none;
+  background-color: transparent;
+  font-size: 14px;
+  padding: 0;
+  outline: none;
+  width: 150px;
 }
 
-/* 响应式设计 */
+/* 隐藏元素 */
+.hidden {
+  display: none !important;
+}
+
+/* 响应式设计 - 移动端适配 */
 @media (max-width: 768px) {
-  .sidebar {
-    width: 200px;
-  }
-
-  .message {
-    max-width: 90%;
-  }
-
   .header {
-    padding: 0 16px;
-  }
-
-  .messages {
-    padding: 16px;
-  }
-
-  .input-form {
-    padding: 12px 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .sidebar {
-    display: none;
+    padding: 0 10px;
   }
 
   .header-left h1 {
+    font-size: 16px;
+  }
+
+  .sidebar {
+    width: 200px;
+    position: fixed;
+    left: 0;
+    top: 60px;
+    bottom: 0;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .chat-container {
+    width: 100%;
+  }
+
+  .menu-toggle {
+    display: block;
+    padding: 8px;
+    cursor: pointer;
     font-size: 18px;
   }
 
-  .header-btn {
-    font-size: 12px;
-    padding: 4px 8px;
+  .main {
+    position: relative;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    display: none;
+  }
+
+  .overlay.active {
+    display: block;
+  }
+
+  .message {
+    max-width: 95%;
+  }
+
+  .input-form {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .input-field {
+    padding: 10px 14px;
+  }
+
+  .send-btn {
+    padding: 0 16px;
+  }
+
+  .auth-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .stats-content {
+    width: 90%;
+    padding: 20px;
   }
 }
 
-.hidden {
-  display: none !important;
+@media (min-width: 769px) {
+  .menu-toggle {
+    display: none;
+  }
+
+  .overlay {
+    display: none !important;
+  }
+}
+
+.send-btn:disabled {
+  background-color: #d9d9d9;
+  cursor: not-allowed;
 }
 
 .edit-title-container {
