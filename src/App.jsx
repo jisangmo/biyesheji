@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import "./App.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
+const API_BASE_URL = "/api";
 
 function App() {
   const [user, setUser] = useState(null);

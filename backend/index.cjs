@@ -498,14 +498,26 @@ apiRouter.get('/admin/stats', (req, res) => {
 // 注册API路由
 app.use('/api', apiRouter);
 
-// 测试路由 - 确保后端正常运行
-app.get('/', (req, res) => {
-  res.json({
-    message: '教育问答系统后端服务正常运行',
-    status: 'ok',
-    timestamp: new Date().toISOString()
+// 提供前端静态文件
+const distPath = path.join(__dirname, '../dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+
+  // 前端路由fallback - 所有非API请求都返回index.html
+  app.get(/^\/(?!api\/).*/, (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
   });
-});
+} else {
+  // 如果dist目录不存在，显示测试页面
+  app.get('/', (req, res) => {
+    res.json({
+      message: '教育问答系统后端服务正常运行',
+      status: 'ok',
+      note: '前端文件未构建，请先运行 npm run build',
+      timestamp: new Date().toISOString()
+    });
+  });
+}
 
 // 启动服务器
 app.listen(PORT, () => {
