@@ -61,9 +61,17 @@ function Admin() {
 
   const fetchStats = async () => {
     try {
+      const savedAdmin = localStorage.getItem("admin");
+      if (!savedAdmin) {
+        setError("请先登录");
+        setShowAuth(true);
+        setLoading(false);
+        return;
+      }
+      const currentAdmin = JSON.parse(savedAdmin);
       const response = await fetch(`${API_BASE_URL}/admin/stats`, {
         headers: {
-          "x-admin-id": admin.id,
+          "x-admin-id": currentAdmin.id,
         },
       });
       if (!response.ok) {
@@ -71,6 +79,7 @@ function Admin() {
       }
       const data = await response.json();
       setStats(data);
+      setError(null);
       setLoading(false);
     } catch (err) {
       setError(err.message);
