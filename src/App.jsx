@@ -394,6 +394,12 @@ function App() {
     setInput("");
     setIsLoading(true);
 
+    const TIMEOUT_DURATION = 60000;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+    }, TIMEOUT_DURATION);
+
     try {
       const generateUUID = () => {
         return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
@@ -422,6 +428,7 @@ function App() {
           user: "demo-yuyi-001",
           files: [],
         }),
+        signal: controller.signal,
       });
 
       if (!response.ok) {
@@ -431,6 +438,7 @@ function App() {
       const reader = response.body.getReader();
       const decoder = new TextDecoder("utf-8");
       let fullAnswer = "";
+      let aiMessageId = Date.now() + 1;
 
       while (true) {
         const { done, value } = await reader.read();
@@ -447,7 +455,7 @@ function App() {
                 const tempMessages = [
                   ...updatedMessages,
                   {
-                    id: Date.now() + 1,
+                    id: aiMessageId,
                     content: fullAnswer,
                     isUser: false,
                   },
@@ -459,16 +467,22 @@ function App() {
         }
       }
 
-      const aiResponse = {
-        id: Date.now() + 1,
-        content: fullAnswer || "抱歉，暂时无法获取回答，请稍后再试。",
-        isUser: false,
-      };
-
-      const finalMessages = [...updatedMessages, aiResponse];
-      setMessages(finalMessages);
+      if (!fullAnswer) {
+        const errorMessage = {
+          id: aiMessageId,
+          content: "抱歉，暂时无法获取回答，请稍后再试。",
+          isUser: false,
+        };
+        const finalMessages = [...updatedMessages, errorMessage];
+        setMessages(finalMessages);
+      }
 
       if (currentConversation) {
+        const finalMessages = [...updatedMessages, {
+          id: aiMessageId,
+          content: fullAnswer || "抱歉，暂时无法获取回答，请稍后再试。",
+          isUser: false,
+        }];
         await saveConversation(currentConversation.id, {
           ...currentConversation,
           messages: finalMessages,
@@ -476,9 +490,12 @@ function App() {
       }
     } catch (error) {
       console.error("API调用失败:", error);
+      const errorContent = error.name === "AbortError" 
+        ? "请求超时，请稍后再试。" 
+        : "抱歉，暂时无法获取回答，请稍后再试。";
       const errorMessage = {
         id: Date.now() + 1,
-        content: "抱歉，暂时无法获取回答，请稍后再试。",
+        content: errorContent,
         isUser: false,
       };
       const finalMessages = [...updatedMessages, errorMessage];
@@ -491,6 +508,7 @@ function App() {
         });
       }
     } finally {
+      clearTimeout(timeoutId);
       setIsLoading(false);
     }
   };

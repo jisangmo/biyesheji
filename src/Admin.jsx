@@ -208,7 +208,7 @@ function Admin() {
 
         <section className="user-stats">
           <h2>用户统计详情</h2>
-          {stats.users.length === 0 ? (
+          {!stats.users || stats.users.length === 0 ? (
             <div className="no-data">
               <p>暂无用户数据</p>
             </div>
