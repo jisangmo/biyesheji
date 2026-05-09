@@ -16,16 +16,12 @@ function Admin() {
     const savedAdmin = localStorage.getItem("admin");
     if (savedAdmin) {
       setAdmin(JSON.parse(savedAdmin));
+      fetchStats();
     } else {
       setShowAuth(true);
+      setLoading(false);
     }
   }, []);
-
-  useEffect(() => {
-    if (admin) {
-      fetchStats();
-    }
-  }, [admin]);
 
   const handleAuth = async () => {
     try {
