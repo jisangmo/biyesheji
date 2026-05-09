@@ -54,9 +54,15 @@ if (!fs.existsSync(feedbacksPath)) {
   fs.writeFileSync(feedbacksPath, JSON.stringify([], null, 2));
 }
 
-// 确保管理员用户文件存在
+// 确保管理员用户文件存在，若不存在则创建默认管理员
 if (!fs.existsSync(adminUsersPath)) {
-  fs.writeFileSync(adminUsersPath, JSON.stringify([], null, 2));
+  const defaultAdmin = [{
+    id: '1',
+    username: 'admin',
+    password: 'admin123',
+    createdAt: new Date().toISOString()
+  }];
+  fs.writeFileSync(adminUsersPath, JSON.stringify(defaultAdmin, null, 2));
 }
 
 // ==================== 用户管理API ====================
