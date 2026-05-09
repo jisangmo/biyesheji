@@ -382,12 +382,25 @@ apiRouter.get('/feedbacks/stats', (req, res) => {
 // 获取所有用户的统计信息
 apiRouter.get('/admin/stats', (req, res) => {
   try {
+    console.log('===== 管理员统计接口被调用 =====');
     const adminUsers = JSON.parse(fs.readFileSync(adminUsersPath, 'utf8'));
     const adminId = req.headers['x-admin-id'];
 
-    if (!adminId || !adminUsers.find(u => u.id === adminId)) {
+    console.log('管理员ID:', adminId);
+    console.log('管理员列表:', JSON.stringify(adminUsers));
+
+    if (!adminId) {
+      console.log('错误: 管理员ID为空');
       return res.status(401).json({ error: '未授权' });
     }
+
+    const admin = adminUsers.find(u => u.id === adminId);
+    if (!admin) {
+      console.log('错误: 管理员不存在');
+      return res.status(401).json({ error: '未授权' });
+    }
+
+    console.log('管理员认证成功:', admin.username);
 
     const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
     const conversations = JSON.parse(fs.readFileSync(conversationsPath, 'utf8'));
